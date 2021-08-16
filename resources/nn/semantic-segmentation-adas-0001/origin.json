@@ -1,0 +1,36 @@
+{
+    "nn_config":
+    {
+        "output_format" : "detection",
+        "NN_family" : "mobilenet",
+        "confidence_threshold" : 0.5,
+        "input_size": "1024x2048"
+    },
+    "mappings":
+    {
+        "labels":
+        [
+            "person",
+            "road",
+            "sidewalk",
+            "building",
+            "wall",
+            "fence",
+            "pole",
+            "trafficlight",
+            "trafficsign",
+            "vegetation",
+            "terrain",
+            "sky",
+            "rider",
+            "car",
+            "truck",
+            "bus",
+            "train",
+            "motorcycle",
+            "bicycle",
+            "egovehicle"
+        ]
+    }
+}
+

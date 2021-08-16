@@ -97,7 +97,7 @@ class ConfigManager:
             return dai.ColorCameraProperties.SensorResolution.THE_12_MP
         else:
             return dai.ColorCameraProperties.SensorResolution.THE_1080_P
-
+            
     def getMonoResolution(self):
         if self.args.mono_resolution == 720:
             return dai.MonoCameraProperties.SensorResolution.THE_720_P

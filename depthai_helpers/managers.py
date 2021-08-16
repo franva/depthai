@@ -568,6 +568,7 @@ class PipelineManager:
             device.getInputQueue(xin.getStreamName(), maxSize=1, blocking=False)
 
     def create_color_cam(self, preview_size, res, fps, full_fov, use_hq):
+        print('res is: {}'.format(res))
         # Define a source - color camera
         self.nodes.cam_rgb = self.p.createColorCamera()
         self.nodes.cam_rgb.setPreviewSize(*preview_size)

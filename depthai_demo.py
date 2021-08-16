@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+import sys
+sys.path.append('./myvenv')
+sys.path.append('./libs')
+
 import os
 from itertools import cycle
 from pathlib import Path
@@ -240,12 +244,15 @@ with dai.Device(pm.p.getOpenVINOVersion(), device_info, usb2Mode=conf.args.usb_s
                     break
 
                 if nn_in is not None:
+                    # host_frame (720, 1280, 3),  scaled_frame.shape (368, 480, 3)
                     scaled_frame = cv2.resize(host_frame, nn_manager.input_size)
                     frame_nn = dai.ImgFrame()
                     frame_nn.setSequenceNum(seq_num)
                     frame_nn.setType(dai.ImgFrame.Type.BGR888p)
                     frame_nn.setWidth(nn_manager.input_size[0])
                     frame_nn.setHeight(nn_manager.input_size[1])
+
+                    # to_planar reshape the dimension --> Color, Height, Width :(3, 368, 480)
                     frame_nn.setData(to_planar(scaled_frame))
                     nn_in.send(frame_nn)
                     seq_num += 1
@@ -260,7 +267,8 @@ with dai.Device(pm.p.getOpenVINOVersion(), device_info, usb2Mode=conf.args.usb_s
                 if in_nn is not None:
                     callbacks.on_nn(in_nn)
                     if not conf.useCamera and conf.args.sync:
-                        host_frame = Previews.host.value(host_out.get())
+                        host_frame = Previews.host.value(host_out.get(), None)
+
                     nn_data = nn_manager.decode(in_nn)
                     fps.tick('nn')
 

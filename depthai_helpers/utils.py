@@ -25,6 +25,7 @@ def to_planar(arr: np.ndarray, shape: tuple = None) -> np.ndarray:
 def to_tensor_result(packet):
     data = {}
     for tensor in packet.getRaw().tensors:
+        
         if tensor.dataType == dai.TensorInfo.DataType.INT:
             data[tensor.name] = np.array(packet.getLayerInt32(tensor.name)).reshape(tensor.dims[::-1])
         elif tensor.dataType == dai.TensorInfo.DataType.FP16:
@@ -33,6 +34,9 @@ def to_tensor_result(packet):
             data[tensor.name] = np.array(packet.getLayerUInt8(tensor.name)).reshape(tensor.dims[::-1])
         else:
             print("Unsupported tensor layer type: {}".format(tensor.dataType))
+
+        # print('tensor data is: {}'.format(data[tensor.name]))
+
     return data
 
 
