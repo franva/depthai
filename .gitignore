@@ -58,3 +58,5 @@ resources/*.json
 
 libs/
 myvenv/
+
+.ipynb_checkpoints/
