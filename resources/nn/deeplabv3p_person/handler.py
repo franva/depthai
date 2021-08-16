@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 
+from depthai_helpers.managers import Previews
 from depthai_helpers.utils import to_tensor_result
 
 
@@ -14,11 +15,16 @@ def decode(nn_manager, packet):
     # print('decode() is called')
     return output_colors
 
-
 def draw(nn_manager, data, frames):
     if len(data) == 0:
         return
     # print('draw() is called')
     for name, frame in frames:
-        if name == nn_manager.source:
-            cv2.addWeighted(frame, 1, data, 0.2, 0, frame)
+        if name in (Previews.color.name, Previews.nn_input.name):
+            scale_factor = frame.shape[0] / nn_manager.input_size[1]
+            resize_w = int(nn_manager.input_size[0] * scale_factor)
+            resized = cv2.resize(data, (resize_w, frame.shape[0])).astype(data.dtype)
+            offset_w = int(frame.shape[1] - nn_manager.input_size[0] * scale_factor) // 2
+            tail_w = frame.shape[1] - offset_w - resize_w
+            stacked = np.hstack((np.zeros((frame.shape[0], offset_w, 3)).astype(resized.dtype), resized, np.zeros((frame.shape[0], tail_w, 3)).astype(resized.dtype)))
+            cv2.addWeighted(frame, 1, stacked, 0.2, 0, frame)
